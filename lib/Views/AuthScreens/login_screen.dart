@@ -2,6 +2,7 @@ import 'package:firebase_app/Controllers/auth_controller.dart';
 import 'package:firebase_app/Views/AuthScreens/forget_password.dart';
 import 'package:firebase_app/Views/AuthScreens/register_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import '../Utils/Components/common_field.dart';
 import '../Utils/Components/login_button.dart';
@@ -175,6 +176,64 @@ class _LoginScreenState extends State<LoginScreen> {
                           );
                         }
                       },
+                    ),
+                  ),
+                  // Divider
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Container(
+                            height: 1,
+                            color: AppTheme.greyColor,
+                          ),
+                        ),
+                      ),
+                      Text(
+                        'OR',
+                        style: CustomTextStyles.smallGreyColorStyle,
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Container(
+                            height: 1,
+                            color: AppTheme.greyColor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  // Signing With Google UI
+                  SizedBox(height: 20),
+                  Center(
+                    child: GestureDetector(
+                      onTap: () async {
+                        await authController.signinWithGoogle();
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: AppTheme.themeColor,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Obx(
+                            () => authController.loader.value
+                                ? Center(
+                                    child: CircularProgressIndicator(
+                                      color: AppTheme.whiteColor,
+                                    ),
+                                  )
+                                : Icon(
+                                    FontAwesomeIcons.google,
+                                    color: AppTheme.whiteColor,
+                                  ),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ],

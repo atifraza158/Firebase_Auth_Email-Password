@@ -5,9 +5,36 @@ import 'package:firebase_app/Views/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthController extends GetxController {
   RxBool loader = false.obs;
+  final auth = FirebaseAuth.instance;
+  final googleSigninIn = GoogleSignIn();
+
+  signinWithGoogle() async {
+    try {
+      loader.value = true;
+      final GoogleSignInAccount? googleSignInAccount =
+          await googleSigninIn.signIn();
+      if (googleSignInAccount != null) {
+        final GoogleSignInAuthentication googleSignInAuthentication =
+            await googleSignInAccount.authentication;
+        final AuthCredential authCredential = GoogleAuthProvider.credential(
+          accessToken: googleSignInAuthentication.accessToken,
+          idToken: googleSignInAuthentication.idToken,
+        );
+
+        await auth.signInWithCredential(authCredential).then((_) => {
+              loader.value = false,
+              Get.to(() => HomeScreen()),
+            });
+      }
+    } on FirebaseAuthException catch (e) {
+      loader.value = false;
+      print(e.toString());
+    }
+  }
 
   signUp(String email, String password) async {
     loader.value = true;
